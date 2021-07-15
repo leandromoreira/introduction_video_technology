@@ -1,137 +1,130 @@
-[🇨🇳](/README-cn.md "Simplified Chinese")
-[🇯🇵](/README-ja.md "Japanese")
-[🇮🇹](/README-it.md "Italian")
-[🇰🇷](/README-ko.md "Korean")
-[🇷🇺](/README-ru.md "Russian")
-[🇧🇷](/README-pt.md "Portuguese")
-
 [![license](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)
 
-# Intro
+# Introdução
 
-A gentle introduction to video technology, although it's aimed at software developers / engineers, we want to make it easy **for anyone to learn**. This idea was born during a [mini workshop for newcomers to video technology](https://docs.google.com/presentation/d/17Z31kEkl_NGJ0M66reqr9_uTG6tI5EDDVXpdPKVuIrs/edit#slide=id.p).
+Essa é uma rápida introdução a tecnologia de vídeo para pessoas desenvolvedoras de software. Entretanto, queremos que esse documento seja fácil o suficiente **para qualquer pessoa aprender**. A idéia nasceu de uma [pequena oficina para pessoas interessadas em tecnologia de vídeo](https://docs.google.com/presentation/d/17Z31kEkl_NGJ0M66reqr9_uTG6tI5EDDVXpdPKVuIrs/edit#slide=id.p).
 
-The goal is to introduce some digital video concepts with a **simple vocabulary, lots of visual elements and practical examples** when possible, and make this knowledge available everywhere. Please, feel free to send corrections, suggestions and improve it.
+O objetivo principal do documento é introduzir alguns conceitos de vídeo digital utilizando um **vocabulário simples, elementos visuais e exemplos práticos**. Além disso, gostaríamos que esse conhecimento estivesse disponível em qualquer lugar. Por favor, fique à vontade para enviar correções, sugestões e melhorias. 
 
-There will be **hands-on** sections which require you to have **docker installed** and this repository cloned.
+Haverão exercícios práticos que irão necessitar do **docker instalado** e esse repositório clonado.  
 
 ```bash
 git clone https://github.com/leandromoreira/digital_video_introduction.git
 cd digital_video_introduction
 ./setup.sh
 ```
-> **WARNING**: when you see a `./s/ffmpeg` or `./s/mediainfo` command, it means we're running a **containerized version** of that program, which already includes all the needed requirements.
+> **ATENCÃO**: quando você ver um comando `./s/ffmpeg` ou `./s/mediainfo`, isso quer dizer que estamos executando uma **versão do programa dentro de um container**, sendo assim, esse programa já possui todas as dependências instaladas e configuradas para sua execução.
 
-All the **hands-on should be performed from the folder you cloned** this repository. For the **jupyter examples** you must start the server `./s/start_jupyter.sh` and copy the URL and use it in your browser.
+Todos os **exercícios práticos devem ser executados da pasta que você clonou originalmente** esse repositório. Para os **exemplos que utilizam Jupyter**, você deve inicializar o servidor utilizando `./s/start_jupyter.sh` e acessar a URL no seu browser.
 
-# Changelog
+# Registro de alterações
 
-* added DRM system
-* released version 1.0.0
-* added simplified Chinese translation
-* added FFmpeg oscilloscope filter example
+* Adicionado detalhes sobre sistemas de DRM (Digital Rights Management)
+* Versão 1.0.0 lançada 
+* Adicionado tradução para chinês simplificado
+* Adicionado exemplo de filtro osciloscópio de FFmpeg
 
-# Index
+# Índice
 
-- [Intro](#intro)
-- [Index](#index)
-- [Basic terminology](#basic-terminology)
-  * [Other ways to encode a color image](#other-ways-to-encode-a-color-image)
-  * [Hands-on: play around with image and color](#hands-on-play-around-with-image-and-color)
-  * [DVD is DAR 4:3](#dvd-is-dar-43)
-  * [Hands-on: Check video properties](#hands-on-check-video-properties)
-- [Redundancy removal](#redundancy-removal)
-  * [Colors, Luminance and our eyes](#colors-luminance-and-our-eyes)
-    + [Color model](#color-model)
-    + [Converting between YCbCr and RGB](#converting-between-ycbcr-and-rgb)
-    + [Chroma subsampling](#chroma-subsampling)
-    + [Hands-on: Check YCbCr histogram](#hands-on-check-ycbcr-histogram)
-  * [Frame types](#frame-types)
-    + [I Frame (intra, keyframe)](#i-frame-intra-keyframe)
-    + [P Frame (predicted)](#p-frame-predicted)
-      - [Hands-on: A video with a single I-frame](#hands-on-a-video-with-a-single-i-frame)
+- [Introdução](#introdução)
+- [Índice](#índice)
+- [Terminologia Básica](#basic-terminology)
+  * [Outras maneiras de codificar uma imagem em cores](#other-ways-to-encode-a-color-image)
+  * [Prática: exercício com imagem e cor](#hands-on-play-around-with-image-and-color)
+  * [DVD é DAR 4:3](#dvd-is-dar-43)
+  * [Prática: Verificar propriedades de vídeo](#hands-on-check-video-properties)
+- [Remoção de redundância](#redundancy-removal)
+  * [Cores, Luminância e os nossos olhos](#colors-luminance-and-our-eyes)
+    + [Modelo de cores](#color-model)
+    + [Conversão entre YCbCr e RGB](#converting-between-ycbcr-and-rgb)
+    + [Subamostragem Chroma](#chroma-subsampling)
+    + [Prática: Verifique um histograma YCbCr](#hands-on-check-ycbcr-histogram)
+  * [Tipos de Frames](#frame-types)
+    + [I frame (intra, keyframe)](#i-frame-intra-keyframe)
+    + [P frame (predicted)](#p-frame-predicted)
+      - [Prática: Um vídeo com somente um I-frame](#hands-on-a-video-with-a-single-i-frame)
     + [B Frame (bi-predictive)](#b-frame-bi-predictive)
-      - [Hands-on: Compare videos with B-frame](#hands-on-compare-videos-with-b-frame)
-    + [Summary](#summary)
-  * [Temporal redundancy (inter prediction)](#temporal-redundancy-inter-prediction)
-      - [Hands-on: See the motion vectors](#hands-on-see-the-motion-vectors)
-  * [Spatial redundancy (intra prediction)](#spatial-redundancy-intra-prediction)
-      - [Hands-on: Check intra predictions](#hands-on-check-intra-predictions)
-- [How does a video codec work?](#how-does-a-video-codec-work)
-  * [What? Why? How?](#what-why-how)
-  * [History](#history)
-    + [The birth of AV1](#the-birth-of-av1)
-  * [A generic codec](#a-generic-codec)
-  * [1st step - picture partitioning](#1st-step---picture-partitioning)
-    + [Hands-on: Check partitions](#hands-on-check-partitions)
-  * [2nd step - predictions](#2nd-step---predictions)
-  * [3rd step - transform](#3rd-step---transform)
-    + [Hands-on: throwing away different coefficients](#hands-on-throwing-away-different-coefficients)
-  * [4th step - quantization](#4th-step---quantization)
-    + [Hands-on: quantization](#hands-on-quantization)
-  * [5th step - entropy coding](#5th-step---entropy-coding)
-    + [VLC coding](#vlc-coding)
-    + [Arithmetic coding](#arithmetic-coding)
-    + [Hands-on: CABAC vs CAVLC](#hands-on-cabac-vs-cavlc)
-  * [6th step - bitstream format](#6th-step---bitstream-format)
+      - [Prática: Compare vídeos com B-frame](#hands-on-compare-videos-with-b-frame)
+    + [Sumário](#summary)
+  * [Redundância Temporal (inter prediction)](#temporal-redundancy-inter-prediction)
+      - [Prática: Veja os vetores de movimento](#hands-on-see-the-motion-vectors)
+  * [Redundância Espacial (intra prediction)](#spatial-redundancy-intra-prediction)
+      - [Prática: Verifique intra prediction](#hands-on-check-intra-predictions)
+- [Como um codec de vídeo funciona?](#how-does-a-video-codec-work)
+  * [O quê? Porquê? Como?](#what-why-how)
+  * [História](#history)
+    + [O nascimento de AV1](#the-birth-of-av1)
+  * [Um codec genérico](#a-generic-codec)
+  * [Primeiro passo - particionando uma figura](#1st-step---picture-partitioning)
+    + [Prática: Verifique as partições](#hands-on-check-partitions)
+  * [Segundo passo - previsões](#2nd-step---predictions)
+  * [Terceiro passo - transformação](#3rd-step---transform)
+    + [Prática: jogando com diferentes coeficientes](#hands-on-throwing-away-different-coefficients)
+  * [Quarto passo - quantização](#4th-step---quantization)
+    + [Prática: quantização](#hands-on-quantization)
+  * [Quinto passo - Codificando entropia](#5th-step---entropy-coding)
+    + [Código VLC](#vlc-coding)
+    + [Código Aritmético](#arithmetic-coding)
+    + [Prática: CABAC vs CAVLC](#hands-on-cabac-vs-cavlc)
+  * [Sexto passo - formato bitstream](#6th-step---bitstream-format)
     + [H.264 bitstream](#h264-bitstream)
-    + [Hands-on: Inspect the H.264 bitstream](#hands-on-inspect-the-h264-bitstream)
-  * [Review](#review)
-  * [How does H.265 achieve a better compression ratio than H.264?](#how-does-h265-achieve-a-better-compression-ratio-than-h264)
-- [Online streaming](#online-streaming)
-  * [General architecture](#general-architecture)
-  * [Progressive download and adaptive streaming](#progressive-download-and-adaptive-streaming)
-  * [Content protection](#content-protection)
-- [How to use jupyter](#how-to-use-jupyter)
-- [Conferences](#conferences)
-- [References](#references)
+    + [Prática: Inspecionar o H.264 bitstream](#hands-on-inspect-the-h264-bitstream)
+  * [Revisão](#review)
+  * [Como H.265 consegue uma melhor razão de compressão comparado com H.264?](#how-does-h265-achieve-a-better-compression-ratio-than-h264)
+- [Transmissão online](#online-streaming)
+  * [Arquitetura geral](#general-architecture)
+  * [Download progressivo e transmissão adaptativa](#progressive-download-and-adaptive-streaming)
+  * [Proteção de conteúdo](#content-protection)
+- [Como usar o Jupyter](#how-to-use-jupyter)
+- [Conferências](#conferences)
+- [Referências](#references)
 
-# Basic terminology
+# Terminologia Básica
 
-An **image** can be thought of as a **2D matrix**. If we think about **colors**, we can extrapolate this idea seeing this image as a **3D matrix** where the **additional dimensions** are used to provide **color data**.
+Uma **imagem** podem ser pensada como uma **matriz 2d**. Se nós começamos a pensar sobre **cores**, podemos extrapolar essa idéia inicial e ver essa imagem como uma **matriz 3d** onde as **dimensões adicionais** são utilizadas para armazenar **informações de cor**.
 
-If we chose to represent these colors using the [primary colors (red, green and blue)](https://en.wikipedia.org/wiki/Primary_color), we define three planes: the first one for **red**, the second for **green**, and the last one for the **blue** color.
+Se escolhemos representar essas cores com [cores primárias (vermelho, verde and azul)](https://pt.wikipedia.org/wiki/Cor_prim%C3%A1ria), podemos definir três planos: o primeiro plano para o **vermelho**, o segundo para o **verde** e o último para a cor **azul**.
 
-![an image is a 3d matrix RGB](/i/image_3d_matrix_rgb.png "An image is a 3D matrix")
+![uma imagem é uma matriz 3D RGB](/i/image_3d_matrix_rgb.png "Uma imagem é uma matriz 3D")
 
-We'll call each point in this matrix **a pixel** (picture element). One pixel represents the **intensity** (usually a numeric value) of a given color. For example, a **red pixel** means 0 of green, 0 of blue and maximum of red. The **pink color pixel** can be formed with a combination of the three colors. Using a representative numeric range from 0 to 255, the pink pixel is defined by **Red=255, Green=192 and Blue=203**.
+Iremos chamar cada ponto nessa matriz de **um pixel** (picture element). Um pixel representa a **intensidade** (geralmente um valor numérico) de uma dada cor. Por exemplo, um **pixel vermelho** significa 0 de verde, 0 de azul e o máximo de vermelho. O **pixel cor rosa** pode ser formado a partir de uma combinação de três cores. Usando uma representação numérica de 0 até 255, onde o pixel rosa é definido por **Vermelho=255, Verde=192 e Azul=203**.
 
-> #### Other ways to encode a color image
-> Many other possible models may be used to represent the colors that make up an image. We could, for instance, use an indexed palette where we'd only need a single byte to represent each pixel instead of the 3 needed when using the RGB model. In such a model we could use a 2D matrix instead of a 3D matrix to represent our color, this would save on memory but yield fewer color options.
+> #### Outras maneiras de codificar uma imagem colorida
+> Muitos outros possíveis modelos podem ser utilizados para representar uma imagem colorida. Nós podemos, por exemplo, utilizar uma paleta indexada de cores, onde um único byte representa cada pixel, ao invés de três bytes quando utilizando o modelo RGB. Em um modelo como esse, podemos utilizar uma matriz 2D ao invés de uma matriz 3D para representar cor. Dessa maneira, nós iremos salvar memória mas teremos potencialmente menos opções de cores.
 >
-> ![NES palette](/i/nes-color-palette.png "NES palette")
+> ![paleta do NES](/i/nes-color-palette.png "Paleta de cores do NES")
 
-For instance, look at the picture down below. The first face is fully colored. The others are the red, green, and blue planes (shown as gray tones).
+Por exemplo, olhe para a figura abaixo. O primeiro rosto ali é totalmente colorido. Os outros rostos são planos vermelho, verde e azul (mostrados em tons de cinza).
 
-![RGB channels intensity](/i/rgb_channels_intensity.png "RGB channels intensity")
+![Intensidade de canais de cores RGB](/i/rgb_channels_intensity.png "Intensidade de canais de cores RGB")
 
-We can see that the **red color** will be the one that **contributes more** (the brightest parts in the second face) to the final color while the **blue color** contribution can be mostly **only seen in Mario's eyes** (last face) and part of his clothes, see how **all planes contribute less** (darkest parts) to the **Mario's mustache**.
+Nós podemos ver que a **cor vermelha** será a cor que **contribuíra mais** (as partes mais brilhantes no segundo rosto) para a cor final, enquanto que a contribuição da **cor azul** pode ser vista **mais concentrada nos olhos do Mário** (último rosto) e em algumas partes de suas roupas. Perceba como **todos os planos de cores** (partes escuras) contribuem menos para o **bigode do Mário**.
 
-And each color intensity requires a certain amount of bits, this quantity is known as **bit depth**. Let's say we spend **8 bits** (accepting values from 0 to 255) per color (plane), therefore we have a **color depth** of **24 bits** (8 bits * 3 planes R/G/B), and we can also infer that we could use 2 to the power of 24 different colors.
+Cada intensidade de cor requer um determinada quantidade de bits, essa quantidade é chamada de **profundidade de bit**. Digamos que vamos gastar **8 bits** (tendo como valores válidos 0 até 255) por cor (plano), dessa forma, nós temos uma **profundidade de cor** de **24 bits** (8 bits vezes 3 planos RGB). Também podemos inferir que podemos utilizar 2 na 24 (2^24) diferentes cores.
 
-> **It's great** to learn [how an image is captured from the world to the bits](http://www.cambridgeincolour.com/tutorials/camera-sensors.htm).
+> **É ótimo** para aprender [como uma imagem se transforma em bits](http://www.cambridgeincolour.com/tutorials/camera-sensors.htm).
 
-Another property of an image is the **resolution**, which is the number of pixels in one dimension. It is often presented as width × height, for example, the **4×4** image below.
+Uma outra propriedade de uma imagem é a **resolução**, que é basicamente o número de pixels em uma dimensão. É geralmente representada por altura x largura, por exemplo: a imagem **4x4** abaixo:
 
-![image resolution](/i/resolution.png "image resolution")
+![resolução da imagem](/i/resolution.png "resolução da imagem")
 
-> #### Hands-on: play around with image and color
-> You can [play around with image and colors](/image_as_3d_array.ipynb) using [jupyter](#how-to-use-jupyter) (python, numpy, matplotlib and etc).
+> #### Prática: brincando com imagens e cores
+> Você pode [brincar com imagens e cores](/image_as_3d_array.ipynb) utilizando [jupyter](#how-to-use-jupyter) (python, numpy, matplotlib, etc).
 >
-> You can also learn [how image filters (edge detection, sharpen, blur...) work](/filters_are_easy.ipynb).
+> Você também pode aprender [como filtros de imagem (detecção de bordas, nitidez, desfoque...) funcionam](/filters_are_easy.ipynb).
 
-Another property we can see while working with images or video is the **aspect ratio** which simply describes the proportional relationship between width and height of an image or pixel.
+Uma outra propriedade que podemos perceber enquanto trabalhamos com imagens ou vídeo é a **proporção da tela** que descreve um relacionamento proporcional entre altura e largura de uma imagem ou pixel.
 
-When people says this movie or picture is **16x9** they usually are referring to the **Display Aspect Ratio (DAR)**, however we also can have different shapes of individual pixels, we call this **Pixel Aspect Ratio (PAR)**.
+Quando as pessoas falam que um filme ou foto é **16x9** geralmente elas estão se referindo ao  **Display Aspect Ratio (DAR)**, entretanto nós também podemos ter diferentes formas de pixels e podemos chamar isso de **Pixel Aspect Ratio (PAR)**.
 
 ![display aspect ratio](/i/DAR.png "display aspect ratio")
 
 ![pixel aspect ratio](/i/PAR.png "pixel aspect ratio")
 
-> #### DVD is DAR 4:3
-> Although the real resolution of a DVD is 704x480 it still keeps a 4:3 aspect ratio because it has a PAR of 10:11 (704x10/480x11)
+> #### DVD é DAR 4:3
+> Mesmo que a resolução real de um DVD seja 704x480, a proporção é mantida em 4:3 considerando que esse filme possui PAR de 10:11 (704x10/480x11)
 
-Finally, we can define a **video** as a **succession of *n* frames** in **time** which can be seen as another dimension, *n* is the frame rate or frames per second (FPS).
+Finalmente, podemos definir um **vídeo** como uma **sucessão de *n* frames** no **tempo** que podemos perceber como uma outra dimensão, onde *n* é a quantidade de quadros por segundo ou frames per second (FPS).
 
 ![video](/i/video.png "video")
 
@@ -398,8 +391,6 @@ Our **prediction can be wrong**, for that reason we need to apply this technique
 
 ![](/i/smw_residual.png)
 
-There are many different types of this sort of prediction. The one you see pictured here is a form of straight planar prediction, where the pixels from the row above the block are copied row to row within the block. Planar prediction also can involve an angular component, where pixels from both the left and the top are used to help predict the current block. And there is also DC prediction, which involves taking the average of the samples right above and to the left of the block. 
-
 > #### Hands-on: Check intra predictions
 > You can [generate a video with macro blocks and their predictions with ffmpeg.](/encoding_pratical_examples.md#generate-debug-video) Please check the ffmpeg documentation to understand the [meaning of each block color](https://trac.ffmpeg.org/wiki/Debug/MacroblocksAndMotionVectors#AnalyzingMacroblockTypes).
 >
@@ -427,7 +418,7 @@ Before we jump into the inner workings of a generic codec, let's look back to un
 
 The video codec [H.261](https://en.wikipedia.org/wiki/H.261)  was born in 1990 (technically 1988), and it was designed to work with **data rates of 64 kbit/s**. It already uses ideas such as chroma subsampling, macro block, etc. In the year of 1995, the **H.263** video codec standard was published and continued to be extended until 2001.
 
-In 2003 the first version of **H.264/AVC** was completed. In the same year, **On2 Technologies**  (formerly known as the Duck Corporation) released their video codec as a **royalty-free** lossy video compression called **VP3**. In 2008, **Google bought** this company, releasing **VP8** in the same year. In December of 2012, Google released the **VP9** and it's  **supported by roughly ¾ of the browser market** (mobile included).
+In 2003 the first version of **H.264/AVC** was completed. In the same year, a company called **TrueMotion** released their video codec as a **royalty-free** lossy video compression called **VP3**. In 2008, **Google bought** this company, releasing **VP8** in the same year. In December of 2012, Google released the **VP9** and it's  **supported by roughly ¾ of the browser market** (mobile included).
 
  **[AV1](https://en.wikipedia.org/wiki/AOMedia_Video_1)** is a new **royalty-free** and open source video codec that's being designed by the [Alliance for Open Media (AOMedia)](http://aomedia.org/), which is composed of the **companies: Google, Mozilla, Microsoft, Amazon, Netflix, AMD, ARM, NVidia, Intel and Cisco** among others. The **first version** 0.1.0 of the reference codec was **published on April 7, 2016**.
 
@@ -442,11 +433,11 @@ In 2003 the first version of **H.264/AVC** was completed. In the same year, **On
 > * **content fee** (0.5% of revenue) and
 > * **per-unit fees about 10 times higher than h264**.
 >
-> The [alliance for open media](http://aomedia.org/about/) was created by companies from hardware manufacturer (Intel, AMD, ARM , Nvidia, Cisco), content delivery (Google, Netflix, Amazon), browser maintainers (Google, Mozilla), and others.
+> The [alliance for open media](http://aomedia.org/about-us/) was created by companies from hardware manufacturer (Intel, AMD, ARM , Nvidia, Cisco), content delivery (Google, Netflix, Amazon), browser maintainers (Google, Mozilla), and others.
 >
 > The companies had a common goal, a royalty-free video codec and then AV1 was born with a much [simpler patent license](http://aomedia.org/license/patent/). **Timothy B. Terriberry** did an awesome presentation, which is the source of this section, about the [AV1 conception, license model and its current state](https://www.youtube.com/watch?v=lzPaldsmJbk).
 >
-> You'll be surprised to know that you can **analyze the AV1 codec through your browser**, go to https://arewecompressedyet.com/analyzer/
+> You'll be surprised to know that you can **analyze the AV1 codec through your browser**, go to http://aomanalyzer.org/
 >
 > ![av1 browser analyzer](/i/av1_browser_analyzer.png "av1 browser analyzer")
 >
@@ -746,7 +737,7 @@ Now that we know more about how codecs work, then it is easy to understand how n
 
 We will compare AVC and HEVC, let's keep in mind that it is almost always a trade-off between more CPU cycles (complexity) and compression rate.
 
-HEVC has bigger and more **partitions** (and **sub-partitions**) options than AVC, more **intra predictions directions/angles**, **improved entropy coding** and more, all these improvements made H.265 capable to compress 50% more than H.264.
+HEVC has bigger and more **partitions** (and **sub-partitions**) options than AVC, more **intra predictions directions**, **improved entropy coding** and more, all these improvements made H.265 capable to compress 50% more than H.264.
 
 ![h264 vs h265](/i/avc_vs_hevc.png "H.264 vs H.265")
 
@@ -787,7 +778,7 @@ In real life production systems, people often use both techniques to provide aut
 
 #### What?
 
-DRM means [Digital rights management](https://sander.saares.eu/categories/drm-is-not-a-black-box/), it's a way **to provide copyright protection for digital media**, for instance, digital video and audio. Although it's used in many places [it's not universally accepted](https://en.wikipedia.org/wiki/Digital_rights_management#DRM-free_works).
+DRM means Digital rights management, it's a way **to provide copyright protection for digital media**, for instance, digital video and audio. Although it's used in many places [it's not universally accepted](https://en.wikipedia.org/wiki/Digital_rights_management#DRM-free_works).
 
 #### Why?
 
@@ -840,8 +831,6 @@ Online Courses and Tutorials:
 * https://people.xiph.org/~tterribe/pubs/lca2012/auckland/intro_to_video1.pdf
 * https://xiph.org/video/vid1.shtml
 * https://xiph.org/video/vid2.shtml
-* https://wiki.multimedia.cx
-* https://mahanstreamer.net
 * http://slhck.info/ffmpeg-encoding-course
 * http://www.cambridgeincolour.com/tutorials/camera-sensors.htm
 * http://www.slideshare.net/vcodex/a-short-history-of-video-coding
@@ -854,7 +843,6 @@ Books:
 
 * https://www.amazon.com/Understanding-Compression-Data-Modern-Developers/dp/1491961538/ref=sr_1_1?s=books&ie=UTF8&qid=1486395327&sr=1-1
 * https://www.amazon.com/H-264-Advanced-Video-Compression-Standard/dp/0470516925
-* https://www.amazon.com/High-Efficiency-Video-Coding-HEVC/dp/3319068946
 * https://www.amazon.com/Practical-Guide-Video-Audio-Compression/dp/0240806301/ref=sr_1_3?s=books&ie=UTF8&qid=1486396914&sr=1-3&keywords=A+PRACTICAL+GUIDE+TO+VIDEO+AUDIO
 * https://www.amazon.com/Video-Encoding-Numbers-Eliminate-Guesswork/dp/0998453005/ref=sr_1_1?s=books&ie=UTF8&qid=1486396940&sr=1-1&keywords=jan+ozer
 
@@ -882,8 +870,6 @@ Software:
 * https://ffmpeg.org/
 * https://ffmpeg.org/ffmpeg-all.html
 * https://ffmpeg.org/ffprobe.html
-* https://mediaarea.net/en/MediaInfo
-* https://www.jongbel.com/
 * https://trac.ffmpeg.org/wiki/
 * https://software.intel.com/en-us/intel-video-pro-analyzer
 * https://medium.com/@mbebenita/av1-bitstream-analyzer-d25f1c27072b#.d5a89oxz8
@@ -972,4 +958,3 @@ Miscellaneous:
 * https://www.youtube.com/watch?v=Lto-ajuqW3w&list=PLzH6n4zXuckpKAj1_88VS-8Z6yn9zX_P6
 * https://www.youtube.com/watch?v=LWxu4rkZBLw
 * https://web.stanford.edu/class/ee398a/handouts/lectures/EE398a_MotionEstimation_2012.pdf
-* https://sander.saares.eu/categories/drm-is-not-a-black-box/
